@@ -24,11 +24,12 @@ public class ResortDAOImpl implements ResortDAO {
 		}
 		if(added) {
 			System.out.println("dto is added ");
-			return true;
+			added=true;
 		}else {
 		System.out.println("dto is not added ");
-		return false;
+		added=false;
 		}
+		return false;
 	}
 
 
@@ -108,6 +109,7 @@ public class ResortDAOImpl implements ResortDAO {
 	}
 
 
+	
 	@Override
 	public List<ResortDTO> getAll() {
 		return this.resortList;

@@ -1,5 +1,7 @@
 package com.xworkz.resort.service;
 
+import java.util.List;
+
 import com.xworkz.resort.dto.ResortDTO;
 
 public interface ResortService {
@@ -12,6 +14,7 @@ public interface ResortService {
 
 	boolean validatAndDeleteByNameAndLocation(String name, String location);
 	
+	 boolean validateAddMultipleResorts(List<ResortDTO> dtos);
 	
 	int validateTotalResortSize();
 }

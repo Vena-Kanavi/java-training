@@ -1,5 +1,7 @@
 package com.xworkz.resort.service;
 
+import java.util.List;
+
 import com.xworkz.resort.dao.ResortDAO;
 import com.xworkz.resort.dto.ResortDTO;
 
@@ -7,19 +9,17 @@ public class ResortServiceImpl implements ResortService {
 
 	private ResortDAO resortDao;
 	String specialChar = "^[^<>'\"/;`%]*$"; 
-	String phone="(0/91)?[7-9][0-9]{9}";
 	public ResortServiceImpl(ResortDAO resortDAO) {
 		System.out.println("invoked ResortServiceImpl");
 		this.resortDao = resortDAO;
 	}
-
+//Dandeli.contains("^[^<>'\"/;`%]*$")
 	@Override
 	public boolean validateAndSave(ResortDTO dto) {
 		boolean validData = false;
 		if (dto != null) {
 			System.out.println("dto is not null,can save fields");
 			String location = dto.getLocation();
-			CharSequence specialChar = "@#$%^&!*";
 			if (location != null && location.length() >= 3 && location.length() <= 15 && !location.isEmpty()
 					&& !location.contains(" ") && !location.contains(specialChar)) {
 				System.out.println("location is valid");
@@ -61,7 +61,12 @@ public class ResortServiceImpl implements ResortService {
 			}
 			if (validData) {
 	            long phoneNumber = dto.getPhoneNo();
-				if (phoneNumber>7000000000l && phoneNumber <= 10000000000l) {
+	            int count=0;
+	            while(phoneNumber>0) {
+	            	phoneNumber=phoneNumber/10;
+	            	count++;
+	            }
+				if (count==10) {
 					System.out.println("phone number is valid");
 					validData = true;
 				} else {
@@ -103,6 +108,7 @@ public class ResortServiceImpl implements ResortService {
 			if(validData) {
 				System.out.println("All data is valid");
 				this.resortDao.save(dto);
+				validData=true;
 				}
 		}else {
 			System.out.println("dto is null can not save fields");
@@ -139,7 +145,7 @@ public class ResortServiceImpl implements ResortService {
 
 	@Override
 	public boolean validatAndDeleteByNameAndLocation(String name, String location) {
-		//CharSequence specialChar = "@#$%^&!*";
+		
 		System.out.println("invoked validatAndDeleteByNameAndLocation");
 		if (name != null && name.length() >= 3 && name.length() <= 15 && !name.isEmpty() && !name.contains(" ")
 				&& location != null && location.length() >= 3 && location.length() <= 15 && !location.isEmpty()
@@ -155,4 +161,26 @@ public class ResortServiceImpl implements ResortService {
     public int validateTotalResortSize() {
     	return this.resortDao.totalResortSize();
     }
+	@Override
+	public boolean validateAddMultipleResorts(List<ResortDTO> dtos) {
+		System.out.println("invoked validateAddMultipleResorts");
+		boolean valid=false;
+		if(dtos!=null && dtos.size()>0) {
+			int size=dtos.size();
+			int tempSize=0;
+				boolean saved=resortDao.addMultipleResorts(dtos);
+				if(!saved) {
+					System.out.println("dto not saved");
+					valid=false;
+				}else {
+					System.out.println("dto saved");
+					tempSize++;
+				}
+			if(tempSize==size) {
+				valid=true;
+			}
+		}
+		return valid;
+	}
+	
 }
